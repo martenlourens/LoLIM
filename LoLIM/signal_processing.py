@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import numpy as np
-from scipy.signal import gaussian
-from scipy.signal import hann
+from scipy.signal.windows import gaussian
+from scipy.signal.windows import hann
 from scipy import fftpack
 
 from matplotlib import pyplot as plt

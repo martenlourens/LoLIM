@@ -1,0 +1,16 @@
+
+The text files are the orignal PyCRtools antenna function
+
+The NPY files are various versions of the AARTFAAC model average across LBA-outer of the superterp
+
+
+AARTFAAC_AVE_LBAOUTER_R700_C17
+	This was used for awhile, however it has C=17e-15 F, when it should be C=17e-12 F. It is only kept for historical reasons
+	
+AARTFAAC_AVE_LBAOUTER_R700C15pF
+	This is the AARTFAAC model with C = 15e-12 F. This is the 'empircal' LNA values reference in teh AARTFAAC beam model paper.
+	This is used by LOFLI
+	
+AARTFAAC_AVE_LBAOUTER_R700C17pF
+	This has C = 17e-12 F, which may be slightly more accurate than  C = 15e-12 F. This is now the default for LOLIM
+

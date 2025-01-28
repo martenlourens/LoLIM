@@ -10,16 +10,19 @@ import datetime
 
 
 ### some initial functions and info
-ITRFCS002 = np.array([3826577.06611,   461022.947639,   5064892.786   ]) ## CS002 location in ITRF coordinates
+ITRFCS002 = np.array([3826577.06611,   461022.947639,   5064892.786   ]) ## CS002 location in ITRF coordinates (incorrect coordinates? https://dominoc925-pages.appspot.com/mapplets/cs_ecef.html)
 latlonCS002 = np.array([52.91512249, 6.869837540]) ## lattitude and longitude of CS002 in degrees
-
+# RTD = 180.0/3.1415926 ##radians to degrees
+RTD = 180 / np.pi
 
 def geoditic_to_ITRF(latLonAlt):
     """for a latLonAlt in degrees, (can be list of three numpy arrays), convert to ITRF coordinates. Using information at: https://en.wikipedia.org/wiki/Geographic_coordinate_conversion#Geodetic_to/from_ENU_coordinates and 
     http://itrf.ensg.ign.fr/faq.php?type=answer"""
     
     a = 6378137.0  #### semi-major axis, m
-    e2 = 0.00669438002290 ## eccentricity squared
+    b = 6356752.314245 # semi-minor axis, m
+    e2 = 1 - (b / a) ** 2
+    # e2 = 0.00669438002290 ## eccentricity squared
     
     def N(lat):
         return a/np.sqrt( 1 - e2*(np.sin(lat)**2) )
@@ -35,7 +38,7 @@ def geoditic_to_ITRF(latLonAlt):
     
     return np.array( [X,Y,Z] )
 
-def convertITRFToLocal(itrfpos, phase_center=ITRFCS002, reflatlon=latlonCS002, out=None):
+def convertITRFToLocal(itrfpos, phase_center=ITRFCS002, reflatlon=latlonCS002, out=None, version='1'):
     """
     ================== ==============================================
     Argument           Description
@@ -53,18 +56,29 @@ def convertITRFToLocal(itrfpos, phase_center=ITRFCS002, reflatlon=latlonCS002, o
     
     lat = reflatlon[0]/RTD
     lon = reflatlon[1]/RTD
-    arg0 = np.array([-np.sin(lon),   -np.sin(lat) * np.cos(lon),   np.cos(lat) * np.cos(lon)])
-    arg1 = np.array([np.cos(lon) ,   -np.sin(lat) * np.sin(lon),   np.cos(lat) * np.sin(lon)])
-    arg2 = np.array([         0.0,    np.cos(lat),                 np.sin(lat)])
+
+    if version == '2':
+        R = np.array([
+            [-np.sin(lon), np.cos(lon), 0.0],
+            [-np.sin(lat) * np.cos(lon), -np.sin(lat) * np.sin(lon), np.cos(lat)],
+            [np.cos(lat) * np.cos(lon), np.cos(lat) * np.sin(lon), np.sin(lat)],
+            ])
+    else:
+        arg0 = np.array([-np.sin(lon),   -np.sin(lat) * np.cos(lon),   np.cos(lat) * np.cos(lon)])
+        arg1 = np.array([np.cos(lon) ,   -np.sin(lat) * np.sin(lon),   np.cos(lat) * np.sin(lon)])
+        arg2 = np.array([         0.0,    np.cos(lat),                 np.sin(lat)])
     
     if out is None:
         ret = np.empty(itrfpos.shape, dtype=np.double )
     else:
         ret = out
     
-    ret[:]  = np.outer(itrfpos[...,0]-phase_center[0], arg0 )
-    ret += np.outer(itrfpos[...,1]-phase_center[1], arg1 )
-    ret += np.outer(itrfpos[...,2]-phase_center[2], arg2 )
+    if version == '2':
+        ret[:] = np.einsum('ij,kj->ki', R, itrfpos - phase_center)
+    else:
+        ret[:]  = np.outer(itrfpos[...,0]-phase_center[0], arg0 )
+        ret += np.outer(itrfpos[...,1]-phase_center[1], arg1 )
+        ret += np.outer(itrfpos[...,2]-phase_center[2], arg2 )
     
     return ret
     

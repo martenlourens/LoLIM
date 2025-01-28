@@ -16,7 +16,7 @@ from scipy import fftpack
 import numpy as np
 
 ## some global variables, this needs to be fixed at some point
-default_raw_data_loc = None#"/exp_app2/appexp1/public/raw_data"
+default_raw_data_loc = "/home/mlourens/AGCluster_link/data/lightning_data" #"/exp_app2/appexp1/public/raw_data"
 default_processed_data_loc = None#"/home/brian/processed_files"
 
 MetaData_directory =  dirname(abspath(__file__)) + '/data' ## change this if antenna_response_model is in a folder different from this module
