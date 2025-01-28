@@ -1140,7 +1140,7 @@ class MultiFile_Dal1:
                             if even_ant_name in self.additional_ant_delays:
                                 if even_ant_name in self.ant_pol_flips:
                                     antenna_polarization = int(not antenna_polarization)
-                                out[ant_i] += self.additional_ant_delays[ even_ant_name ][ antenna_polarization ]
+                                out[external_index] += self.additional_ant_delays[ even_ant_name ][ antenna_polarization ]
 
 
                 # for ant_i, adjust_i_A in enumerate(self.order_adjusts):

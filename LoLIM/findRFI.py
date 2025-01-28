@@ -12,7 +12,7 @@ from os import path
 
 import numpy as np
 from matplotlib import pyplot as plt
-from scipy.signal import gaussian
+from scipy.signal.windows import gaussian
 
 from LoLIM.utilities import processed_data_dir
 from LoLIM.signal_processing import half_hann_window, num_double_zeros
