@@ -1,0 +1,10 @@
+
+install needs to be able to delete old redirection
+	need option to add line to basrh.rc instead, like Pycrtools
+
+need to update readme
+
+
+change iter mapper to use new  PSE format
+    
+ make command-line tool to explore HDF5 files
