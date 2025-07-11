@@ -102,6 +102,7 @@ class getTrace_fromLoc:
         local_data_index = int( data_filter.blocksize*0.5 )
         
         input_data = station_data.get_data(starting_index-local_data_index , data_filter.blocksize, antenna_index=file_antenna_index  )
+
         input_data = np.array( input_data, dtype=np.double )
         if do_remove_saturation:
             remove_saturation( input_data, positive_saturation, negative_saturation, removal_length, saturation_half_hann_length )
